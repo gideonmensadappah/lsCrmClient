@@ -1,6 +1,5 @@
 import { FC } from "react";
 import useStyles from "../../screens/Employees/useStyles";
-import employeeAvatar from "../Common/Avatar";
 import { EmployeeCardPros } from "../EmployeeCard";
 import { RenderRowItem } from "../RenderRowItem";
 

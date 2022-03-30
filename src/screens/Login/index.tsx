@@ -14,7 +14,6 @@ import CustomizedSnackbars from "../../components/Common/Snackbars/index";
 import { alertAction } from "../../redux/alerts/alert-reducer";
 import { singIn } from "../../redux/auth/auth-actions";
 import { authErrorStateSelector } from "../../redux/auth/auth-selector";
-import { authAction } from "../../redux/auth/auth-reducer";
 
 export const Login: FC = () => {
   const [formState, setInputState] = useState(initialIEmployeeSignUpInfo);

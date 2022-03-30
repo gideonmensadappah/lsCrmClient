@@ -27,7 +27,7 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
 
   useEffect(() => {
     dispatch(fetch_employees());
-  }, [employees]);
+  }, [employees, dispatch]);
 
   const classes = useStyles();
 

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { IEmployeePersonalInfo } from "../../interfaces/Employee/index";
-import { employees } from "../../screens/Employees/mock";
 import { fetch_employees } from "./employees.actions";
 
 export interface EmployeeState {
