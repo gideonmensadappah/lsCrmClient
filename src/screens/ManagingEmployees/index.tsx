@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 
 import Add from "@mui/icons-material/Add";
 
@@ -13,6 +13,15 @@ import { useMobile } from "../../hooks/useMobile";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import CustomizedSnackbars from "../../components/Common/Snackbars/index";
+import { useSelector } from "react-redux";
+import {
+  employeesErrorStateSelector,
+  employeesErrorTypeStateSelector,
+} from "../../redux/employees/employees-selector";
+import { emploeesAction } from "../../redux/employees/employees.reducer";
+import { useAuth } from "../../hooks/useAuth";
+import { IEmployeePersonalInfo } from "../../interfaces/Employee/index";
 
 const manageModal = {
   isAddingEmployee: false,
@@ -26,10 +35,21 @@ export const ManageEmployeesScreen: FC<ManageEmployeesProps> = ({
 }) => {
   const [{ isAddingEmployee, isEditingEmployee }, setIsManageModalEmployee] =
     useState(manageModal);
+  const [employeeOnEdit, setEmployeeOnEdit] =
+    useState<IEmployeePersonalInfo | null>(null);
 
-  // useEffect(() => {
-  //   console.log(firbaseApp.auth().currentUser);
-  // }, []);
+  const employeesError = useSelector(employeesErrorStateSelector);
+  const employeesErrorType = useSelector(employeesErrorTypeStateSelector);
+  const { clearError } = emploeesAction;
+
+  useAuth({
+    authMeeage: employeesError,
+    authErrorType: employeesErrorType,
+    clearSource: clearError,
+  });
+
+  const handleSetEmployeeOnEdit = (employee: IEmployeePersonalInfo | null) =>
+    setEmployeeOnEdit(employee);
 
   const handleOpenisAddingEmployee = () =>
     setIsManageModalEmployee((prevState) => ({
@@ -42,20 +62,29 @@ export const ManageEmployeesScreen: FC<ManageEmployeesProps> = ({
       isEditingEmployee: !prevState.isEditingEmployee,
     }));
 
-  const handleClose = () => setIsManageModalEmployee(manageModal);
+  const handleClose = () => {
+    setIsManageModalEmployee(manageModal);
+    handleSetEmployeeOnEdit(null);
+  };
 
   const isMobile = useMobile();
   const classes = useStyles();
 
   const employeesListprops = {
     open: isEditingEmployee,
+    handleSetEmployeeOnEdit,
     handleOpen: handleOpenEditingEmployee,
     handleClose,
   };
   const modalProps = {
     handleClose,
-    open: isAddingEmployee,
-    Element: <AddEmployeeCard handleClose={handleClose} />,
+    open: isAddingEmployee || !!employeeOnEdit,
+    Element: (
+      <AddEmployeeCard
+        employeeOnEdit={employeeOnEdit}
+        handleClose={handleClose}
+      />
+    ),
   };
 
   const AddEmployeeBtn = isMobile ? (
@@ -77,6 +106,7 @@ export const ManageEmployeesScreen: FC<ManageEmployeesProps> = ({
       </div>
       <EmployeesList {...employeesListprops} />
       <CustomizedModal {...modalProps} />
+      <CustomizedSnackbars />
     </div>
   );
 };

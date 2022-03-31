@@ -7,6 +7,7 @@ export const Title: FC = ({ children }) => (
     id='transition-modal-title'
     variant='h6'
     component='h2'
+    style={{ cursor: "default" }}
   >
     {children}
   </Typography>

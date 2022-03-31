@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-export default makeStyles({
+export default makeStyles<any, any>({
   boxStyle: {
     backgroundColor: "white",
     height: "100%",
@@ -9,10 +9,12 @@ export default makeStyles({
     flexDirection: "column",
     justifyContent: "space-around",
 
-    padding: "0 2rem",
+    padding: "2rem",
 
-    "& >:first-child": {
-      cursor: "pointer",
+    "@media only screen and (min-width: 600px)": {
+      position: "absolute",
+      maxHeight: "521px",
+      maxWidth: "566px",
     },
   },
   headerStyle: {
@@ -29,7 +31,8 @@ export default makeStyles({
   inputsGrop: {
     height: "90%",
     "& >:not(:last-child)": {
-      margin: "0.65rem 0",
+      margin: ({ inputWithMargin }: any) =>
+        !inputWithMargin ? "0" : "0.65rem 0",
     },
 
     "& >:last-child": {

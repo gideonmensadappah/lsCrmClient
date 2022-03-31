@@ -1,5 +1,5 @@
 import { Response } from "../interfaces/api";
-import { POST, GET, DELETE } from "./api-requests";
+import { POST, GET, DELETE, PATCH } from "./api-requests";
 import { URLS } from "./api-urls";
 import {
   IEmployeeSignUpInfo,
@@ -27,6 +27,16 @@ export const addEmployee = async (
   return { data, status };
 };
 
+// editEmployee
+export const editEmployee = async (
+  userData: IEmployeeSignUpInfo
+): Promise<Response<IEmployeePersonalInfo>> => {
+  const { retypePassword, ...rest } = userData;
+  const { data, status } = await PATCH(`${URLS.EMPLOYEE}/${rest._id}`, {
+    ...rest,
+  });
+  return { data, status };
+};
 // deleteEmployee
 export const deleteEmployee = async (
   _id: string

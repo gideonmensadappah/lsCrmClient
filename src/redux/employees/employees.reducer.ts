@@ -7,6 +7,7 @@ import {
   delete_employee,
 } from "./employees.actions";
 import { AlertType } from "../../interfaces/redux/IAlertState/index";
+import { edit_employee } from "./employees.actions";
 
 export interface EmployeeState {
   employees: Array<IEmployeePersonalInfo>;
@@ -51,7 +52,7 @@ export const emploeesSlice = createSlice({
     // add_employee
     builder.addCase(add_employee.fulfilled, (state, action) => {
       const employee = action.payload;
-      // state.employees = [...state.employees, employee];
+      state.employees = [employee, ...state.employees];
       state.loading = false;
       state.error = "employee was added successfully!";
       state.errorType = AlertType.success;
@@ -61,6 +62,24 @@ export const emploeesSlice = createSlice({
     });
     builder.addCase(add_employee.rejected, (state, action) => {
       state.error = "faild to add employee!";
+      state.errorType = AlertType.error;
+      state.loading = false;
+    });
+    // edit_employee
+    builder.addCase(edit_employee.fulfilled, (state, action) => {
+      const updatedEmployee = action.payload;
+      state.employees = state.employees.map((employee) =>
+        employee._id === updatedEmployee._id ? updatedEmployee : employee
+      );
+      state.loading = false;
+      state.error = "employee was updated successfully!";
+      state.errorType = AlertType.success;
+    });
+    builder.addCase(edit_employee.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(edit_employee.rejected, (state, action) => {
+      state.error = "faild to update employee!";
       state.errorType = AlertType.error;
       state.loading = false;
     });

@@ -36,6 +36,10 @@ export const CustomizedModal: FC<CustomizedModalProp> = (props) => {
 
 const useStyles = makeStyles<Theme & { displayBg?: boolean }>({
   modal: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+
     "@media only screen and (max-width: 600px)": {
       "& > div": {
         position: ({ displayBg }: any) => (displayBg ? "" : "static"),

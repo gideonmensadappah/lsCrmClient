@@ -8,6 +8,7 @@ import {
   deleteEmployee,
 } from "../../api/employee";
 import { IEmployeeSignUpInfo } from "../../interfaces/Employee/index";
+import { editEmployee } from "../../api/employee";
 
 export const fetch_employees = createAsyncThunk(
   "employees/fetch_employees",
@@ -47,6 +48,25 @@ export const add_employee = createAsyncThunk(
     },
   }
 );
+export const edit_employee = createAsyncThunk(
+  "employees/edit_employee",
+  async (employee: IEmployeeSignUpInfo, { rejectWithValue }) => {
+    try {
+      const { status, data } = await editEmployee(employee);
+      if (!data || status !== Req.success) throw data;
+      return employee;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  },
+  {
+    condition: (_, { getState }) => {
+      const { employees } = getState() as IStoreRootState;
+      return employees.loading === false;
+    },
+  }
+);
+
 export const delete_employee = createAsyncThunk(
   "employees/delete_employee",
   async (_id: string, { rejectWithValue }) => {

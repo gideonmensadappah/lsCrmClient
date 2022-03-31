@@ -4,7 +4,10 @@ import { CustomizedModal } from "../../components/Common/CustomizedModal";
 import { TableHeadRow } from "../../components/TableHeadRow/index";
 
 import { useMobile } from "../../hooks/useMobile";
-import { IEmployeePersonalInfo } from "../../interfaces/Employee/index";
+import {
+  IEmployeePersonalInfo,
+  IEmployeeSignUpInfo,
+} from "../../interfaces/Employee/index";
 
 import { header } from "./mock";
 import { RenderEmployeeCard } from "../../components/RenderEmployeeCard/index";
@@ -19,6 +22,7 @@ export type EmployeesListProps = {
   open: boolean;
   handleOpen: () => void;
   handleClose: () => void;
+  handleSetEmployeeOnEdit: (emplyee: IEmployeePersonalInfo) => void;
 };
 
 export const EmployeesList: FC<EmployeesListProps> = (props) => {
@@ -35,17 +39,17 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
 
   const isAdmin = useIsSuperAdmin();
 
-  const modalProps = {
-    open,
-    displayBg: true,
-    handleClose,
-    Element: (
-      <div className={classes.editModal}>
-        <div onClick={handleClose}>Edit</div>
-        <div onClick={handleClose}>Delete</div>
-      </div>
-    ),
-  };
+  // const modalProps = {
+  //   open,
+  //   displayBg: true,
+  //   handleClose,
+  //   Element: (
+  //     <div className={classes.editModal}>
+  //       <div onClick={handleClose}>Edit</div>
+  //       <div onClick={handleClose}>Delete</div>
+  //     </div>
+  //   ),
+  // };
 
   const tableHeaderProps = isAdmin
     ? {
@@ -75,7 +79,7 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
         };
         return <RenderEmployeeCard {...{ employee: emp, ...props }} />;
       })}
-      <CustomizedModal {...modalProps} />
+      {/* <CustomizedModal {...modalProps} /> */}
     </div>
   );
 };

@@ -11,13 +11,16 @@ import { useDispatch } from "react-redux";
 import { delete_employee } from "../../redux/employees/employees.actions";
 import { useIsSuperAdmin } from "../../hooks/useIsSuperAdmin";
 
-type RenderEmployeeCardProps = Pick<EmployeesListProps, "handleOpen"> & {
+type RenderEmployeeCardProps = Pick<
+  EmployeesListProps,
+  "handleOpen" | "handleSetEmployeeOnEdit"
+> & {
   employee: IEmployeePersonalInfo;
 };
 
 export const RenderEmployeeCard: FC<RenderEmployeeCardProps> = (props) => {
   const dispatch = useDispatch();
-  const { employee, handleOpen } = props;
+  const { employee, handleOpen, handleSetEmployeeOnEdit } = props;
 
   const { _id, ...rest } = employee;
   const isAdmin = useIsSuperAdmin();
@@ -26,7 +29,7 @@ export const RenderEmployeeCard: FC<RenderEmployeeCardProps> = (props) => {
 
   const handleEdit = () => {
     console.log(employee);
-    // dispatch(edit_employee(employee))
+    handleSetEmployeeOnEdit(employee);
   };
   const handleDelete = () => {
     console.log(_id);
