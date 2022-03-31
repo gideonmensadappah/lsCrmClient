@@ -1,5 +1,5 @@
 export enum Req {
   failed = "failed",
-  success = "success",
+  success = 200,
   token = "token",
 }

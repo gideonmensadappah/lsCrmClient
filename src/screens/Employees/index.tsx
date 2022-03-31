@@ -2,7 +2,6 @@ import { FC, useEffect } from "react";
 
 import { CustomizedModal } from "../../components/Common/CustomizedModal";
 import { TableHeadRow } from "../../components/TableHeadRow/index";
-import { connectedemployee } from "../../components/TableRowCard/index";
 
 import { useMobile } from "../../hooks/useMobile";
 import { IEmployeePersonalInfo } from "../../interfaces/Employee/index";
@@ -14,6 +13,7 @@ import useStyles from "./useStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { employeesSelectore } from "../../redux/employees/employees-selector";
 import { fetch_employees } from "../../redux/employees/employees.actions";
+import { useIsSuperAdmin } from "../../hooks/useIsSuperAdmin";
 
 export type EmployeesListProps = {
   open: boolean;
@@ -27,13 +27,13 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
 
   useEffect(() => {
     dispatch(fetch_employees());
-  }, [employees, dispatch]);
+  }, [dispatch]);
 
   const classes = useStyles();
 
   const { open, handleClose } = props;
 
-  const { isAdmin } = connectedemployee;
+  const isAdmin = useIsSuperAdmin();
 
   const modalProps = {
     open,
@@ -62,13 +62,16 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
         <TableHeadRow {...(tableHeaderProps as IEmployeePersonalInfo)} />
       )}
       {employees.map((employee) => {
+        const { address, roll, phone, firstName, lastName, createdAt } =
+          employee;
         const emp: IEmployeePersonalInfo = {
-          firstName: employee.firstName,
-          lastName: employee.lastName,
-          phone: employee.phone ?? "NO PHONE",
-          address: employee.address ?? "NO ADDRESS",
-          roll: employee.roll ?? "NO ROLL",
-          createdAt: employee.createdAt,
+          _id: employee._id,
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone?.trim() ? phone : "NO PHONE",
+          address: address?.trim() ? address : "NO ADDRESS",
+          roll: roll?.trim() ? roll : "NO ROLL",
+          createdAt: createdAt,
         };
         return <RenderEmployeeCard {...{ employee: emp, ...props }} />;
       })}

@@ -7,10 +7,29 @@ import { useNavigate } from "react-router-dom";
 import { Path } from "../../interfaces/Routes";
 import { RenderFormTitle } from "../../components/RenderFormTitle/index";
 import { initialIEmployeeSignUpInfo } from "../../utils/Healpers/staticData";
+import { useDispatch, useSelector } from "react-redux";
+import { useAuth } from "../../hooks/useAuth";
+import { emploeesAction } from "../../redux/employees/employees.reducer";
+import { add_employee } from "../../redux/employees/employees.actions";
+import {
+  employeesErrorTypeStateSelector,
+  employeesErrorStateSelector,
+} from "../../redux/employees/employees-selector";
 
 export const Register: FC = () => {
   const [formState, setInputState] = useState(initialIEmployeeSignUpInfo);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { clearError } = emploeesAction;
+  const employeesError = useSelector(employeesErrorStateSelector);
+
+  const employeesErrorType = useSelector(employeesErrorTypeStateSelector);
+
+  useAuth({
+    authMeeage: employeesError,
+    authErrorType: employeesErrorType,
+    clearSource: clearError,
+  });
 
   const gotoSignIn = () => navigate(Path.login);
 
@@ -19,7 +38,10 @@ export const Register: FC = () => {
   }: React.ChangeEvent<HTMLInputElement>) =>
     setInputState((prev) => ({ ...prev, [name]: value }));
 
-  const handleClick = () => setInputState(initialIEmployeeSignUpInfo);
+  const handleClick = () => {
+    dispatch(add_employee(formState));
+    setInputState(initialIEmployeeSignUpInfo);
+  };
 
   const classes = useStyles();
   const styls = {

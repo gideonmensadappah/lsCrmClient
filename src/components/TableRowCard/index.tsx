@@ -3,9 +3,6 @@ import useStyles from "../../screens/Employees/useStyles";
 import { EmployeeCardPros } from "../EmployeeCard";
 import { RenderRowItem } from "../RenderRowItem";
 
-export const connectedemployee = {
-  isAdmin: true,
-};
 export const TableRowCard: FC<EmployeeCardPros> = (props) => {
   const classes = useStyles();
 

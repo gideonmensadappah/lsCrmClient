@@ -24,6 +24,14 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { authAction } from "../../redux/auth/auth-reducer";
 import { AlertType } from "../../interfaces/redux/IAlertState";
+import { useAuth } from "../../hooks/useAuth";
+
+const styls = {
+  justifyContent: "center",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
 
 type LoginProps = {
   firbaseApp?: firebase.app.App;
@@ -33,10 +41,11 @@ export const Login: FC<LoginProps> = ({ firbaseApp }) => {
   const authMeeage = useSelector(authMessageStateSelector);
   const authErrorType = useSelector(authMessageTypeStateSelector);
 
-  const { createMessage } = alertAction;
   const { clearError } = authAction;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useAuth({ authMeeage, authErrorType, clearSource: clearError });
 
   // useEffect(() => {
   //   const ui = new firebaseui.auth.AuthUI(firbaseApp.auth());
@@ -53,15 +62,6 @@ export const Login: FC<LoginProps> = ({ firbaseApp }) => {
   //   });
   // }, []);
 
-  useEffect(() => {
-    if (authMeeage) {
-      console.log(authErrorType);
-      dispatch(createMessage({ message: authMeeage, type: authErrorType }));
-      dispatch(clearError());
-      if (authErrorType === AlertType.success) navigate(Path.manageEmployee);
-    }
-  }, [authMeeage, authErrorType]);
-
   const gotoSignIn = () => navigate(Path.register);
 
   const handleChange = ({
@@ -75,12 +75,6 @@ export const Login: FC<LoginProps> = ({ firbaseApp }) => {
   };
 
   const classes = useStyles();
-  const styls = {
-    justifyContent: "center",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  };
 
   return (
     <div className={classes.container}>

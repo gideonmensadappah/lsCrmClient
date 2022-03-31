@@ -1,18 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { IEmployeePersonalInfo } from "../../interfaces/Employee/index";
-import { fetch_employees } from "./employees.actions";
+import {
+  fetch_employees,
+  add_employee,
+  delete_employee,
+} from "./employees.actions";
+import { AlertType } from "../../interfaces/redux/IAlertState/index";
 
 export interface EmployeeState {
   employees: Array<IEmployeePersonalInfo>;
   loading: boolean;
   error: string;
+  errorType: AlertType | null;
 }
 
 const initialState: EmployeeState = {
   employees: [],
   loading: false,
   error: "",
+  errorType: null,
 };
 
 export const emploeesSlice = createSlice({
@@ -23,10 +30,12 @@ export const emploeesSlice = createSlice({
       return {
         ...state,
         error: "",
+        errorType: null,
       };
     },
   },
   extraReducers: (builder) => {
+    // fetch_employees
     builder.addCase(fetch_employees.fulfilled, (state, action) => {
       const employees = action.payload;
       state.employees = employees;
@@ -37,6 +46,41 @@ export const emploeesSlice = createSlice({
     });
     builder.addCase(fetch_employees.rejected, (state, action) => {
       state.error = action.error.message!;
+      state.loading = false;
+    });
+    // add_employee
+    builder.addCase(add_employee.fulfilled, (state, action) => {
+      const employee = action.payload;
+      // state.employees = [...state.employees, employee];
+      state.loading = false;
+      state.error = "employee was added successfully!";
+      state.errorType = AlertType.success;
+    });
+    builder.addCase(add_employee.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(add_employee.rejected, (state, action) => {
+      state.error = "faild to add employee!";
+      state.errorType = AlertType.error;
+      state.loading = false;
+    });
+    // delete_employee
+    builder.addCase(delete_employee.fulfilled, (state, action) => {
+      const employeeId = action.payload;
+      const updatedEmployees = state.employees.filter(
+        (employee) => employee._id !== employeeId
+      );
+      state.employees = updatedEmployees;
+      state.loading = false;
+      state.error = "employee was deleted successfully!";
+      state.errorType = AlertType.success;
+    });
+    builder.addCase(delete_employee.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(delete_employee.rejected, (state, action) => {
+      state.error = "faild to deleted employee!";
+      state.errorType = AlertType.error;
       state.loading = false;
     });
   },

@@ -17,3 +17,8 @@ export const employeesErrorStateSelector = createSelector(
   authStateSelector,
   (state) => state.error
 );
+
+export const employeesErrorTypeStateSelector = createSelector(
+  authStateSelector,
+  (state) => state.errorType
+);

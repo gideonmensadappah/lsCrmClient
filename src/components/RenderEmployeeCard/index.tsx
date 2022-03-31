@@ -1,33 +1,49 @@
 import { FC } from "react";
 
 import { EmployeeCard } from "../EmployeeCard/index";
-import { TableRowCard, connectedemployee } from "../TableRowCard/index";
+import { TableRowCard } from "../TableRowCard/index";
 import { EmployeesListProps } from "../../screens/Employees/index";
 
 import { getIconByName } from "../../utils/Healpers/index";
 import { useMobile } from "../../hooks/useMobile";
 import { IEmployeePersonalInfo } from "../../interfaces/Employee/index";
+import { useDispatch } from "react-redux";
+import { delete_employee } from "../../redux/employees/employees.actions";
+import { useIsSuperAdmin } from "../../hooks/useIsSuperAdmin";
 
 type RenderEmployeeCardProps = Pick<EmployeesListProps, "handleOpen"> & {
   employee: IEmployeePersonalInfo;
 };
 
 export const RenderEmployeeCard: FC<RenderEmployeeCardProps> = (props) => {
+  const dispatch = useDispatch();
   const { employee, handleOpen } = props;
+
   const { _id, ...rest } = employee;
-  const { isAdmin } = connectedemployee;
+  const isAdmin = useIsSuperAdmin();
 
   const isMobile = useMobile();
 
-  const handleEdit = () => alert(_id);
-  const handleDelete = () => {};
+  const handleEdit = () => {
+    console.log(employee);
+    // dispatch(edit_employee(employee))
+  };
+  const handleDelete = () => {
+    console.log(_id);
+    dispatch(delete_employee(_id!));
+  };
 
   const tableRowCardEdit = {
     edit: (
       <>
-        <img onClick={handleEdit} src={getIconByName("edit")} alt='edit icon' />
         <img
-          style={{ marginInlineStart: "2rem" }}
+          style={{ cursor: "pointer" }}
+          onClick={handleEdit}
+          src={getIconByName("edit")}
+          alt='edit icon'
+        />
+        <img
+          style={{ cursor: "pointer", marginInlineStart: "2rem" }}
           onClick={handleDelete}
           src={getIconByName("delete")}
           alt='delete icon'
