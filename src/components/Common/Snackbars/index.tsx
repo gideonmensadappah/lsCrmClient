@@ -23,6 +23,7 @@ function TransitionUp(props: TransitionProps) {
 
 export default function CustomizedSnackbars() {
   const alertState = useSelector(alertStateSelector);
+
   const { clearAlert } = alertAction;
 
   const dispatch = useDispatch();
@@ -35,6 +36,7 @@ export default function CustomizedSnackbars() {
 
     dispatch(clearAlert());
   };
+  console.log(alertState);
   const severity = alertState.type === "error" ? "error" : "success";
   const style = { width: "100%" };
   return (

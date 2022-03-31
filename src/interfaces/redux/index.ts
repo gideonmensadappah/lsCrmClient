@@ -1,4 +1,3 @@
-import { IEmployeePersonalInfo } from "../Employee/index";
 import { IAlertState } from "./IAlertState/index";
 import { AuthState } from "../../redux/auth/auth-reducer";
 import { EmployeeState } from "../../redux/employees/employees.reducer";

@@ -12,8 +12,9 @@ export const singIn = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const { status, data } = await signIn({ email, password });
-      if (!data || status === Req.failed) throw new Error("cant log in!");
+      const { status, data }: any = await signIn({ email, password });
+      console.log(data);
+      if (!data || status !== 200) throw new Error(data.message);
       return data;
     } catch (err) {
       return rejectWithValue(err);

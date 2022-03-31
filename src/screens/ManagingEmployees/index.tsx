@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import Add from "@mui/icons-material/Add";
 
@@ -11,13 +11,25 @@ import { EmployeesList } from "../Employees";
 import useStyles from "./useStyles";
 import { useMobile } from "../../hooks/useMobile";
 
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+
 const manageModal = {
   isAddingEmployee: false,
   isEditingEmployee: false,
 };
-export const ManageEmployeesScreen: FC = () => {
+type ManageEmployeesProps = {
+  firbaseApp?: firebase.app.App;
+};
+export const ManageEmployeesScreen: FC<ManageEmployeesProps> = ({
+  firbaseApp,
+}) => {
   const [{ isAddingEmployee, isEditingEmployee }, setIsManageModalEmployee] =
     useState(manageModal);
+
+  // useEffect(() => {
+  //   console.log(firbaseApp.auth().currentUser);
+  // }, []);
 
   const handleOpenisAddingEmployee = () =>
     setIsManageModalEmployee((prevState) => ({

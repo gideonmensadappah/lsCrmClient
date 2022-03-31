@@ -13,7 +13,17 @@ export const isAuthStateSelectorLoading = createSelector(
   (state) => state.loading
 );
 
-export const authErrorStateSelector = createSelector(
+export const authMessageStateSelector = createSelector(
   authStateSelector,
   (state) => state.error
+);
+
+export const authMessageTypeStateSelector = createSelector(
+  authStateSelector,
+  (state) => state.errorType
+);
+
+export const authenticatedEmployee = createSelector(
+  authStateSelector,
+  (state) => state.employee
 );

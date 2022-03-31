@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  IAlertState,
-  AlertType,
-} from "../../interfaces/redux/IAlertState/index";
+import { IAlertState } from "../../interfaces/redux/IAlertState/index";
 
 export const initialState: IAlertState = {
   type: null,
@@ -16,23 +13,17 @@ export const alertSlice = createSlice({
     clearAlert(state) {
       return {
         ...state,
-        message: "",
         type: null,
+        message: "",
       };
     },
 
-    createErrorMessage(state, action) {
+    createMessage(state, action) {
+      const { message, type } = action.payload;
       return {
         ...state,
-        type: AlertType.error,
-        message: action.payload.message,
-      };
-    },
-    createSuccessMessage(state, action) {
-      return {
-        ...state,
-        type: AlertType.success,
-        message: action.payload.message,
+        type,
+        message,
       };
     },
   },
