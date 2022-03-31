@@ -1,17 +1,22 @@
 import { makeStyles } from "@mui/styles";
 import { FC } from "react";
 
-type Props = {
+type Props<T = string> = {
+  name: string;
+  values: Array<T>;
+  id?: string;
   handleChange: (event: any) => void;
 };
 
-export const CustomizedSelects: FC<Props> = ({ handleChange }) => {
+export const CustomizedSelects: FC<Props> = (props) => {
+  const { values, name, id, handleChange } = props;
   const classes = useStyles();
   return (
     <div className={classes.selectContainer}>
-      <select onChange={handleChange} name='language' id='language'>
-        <option value='EN'>En</option>
-        <option value='HE'>HE</option>
+      <select onChange={handleChange} name={name} id={id}>
+        {values.map((value) => (
+          <option value={value}>{value}</option>
+        ))}
       </select>
     </div>
   );

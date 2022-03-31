@@ -81,7 +81,12 @@ export const Login: FC<LoginProps> = ({ firbaseApp }) => {
       <div>Sign In</div>
 
       <div style={styls as any}>
-        <CustomizedSelects handleChange={handleChange} />
+        <CustomizedSelects
+          values={["EN", "HE"]}
+          name='language'
+          id='language'
+          handleChange={handleChange}
+        />
         <div className={classes.formCard}>
           <div>
             <Input

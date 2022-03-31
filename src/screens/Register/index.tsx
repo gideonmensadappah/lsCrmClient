@@ -54,7 +54,13 @@ export const Register: FC = () => {
     <div className={classes.container}>
       <div>Sign Up</div>
       <div style={styls as any}>
-        <CustomizedSelects handleChange={handleChange} />
+        <CustomizedSelects
+          values={["EN", "HE"]}
+          name='language'
+          id='language'
+          handleChange={handleChange}
+        />
+
         <div className={classes.formCard}>
           <div>
             <RenderFormTitle>Personal Details</RenderFormTitle>

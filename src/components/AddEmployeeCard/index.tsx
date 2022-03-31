@@ -23,12 +23,14 @@ type Props = {
   handleClose: () => void;
   employeeOnEdit: IEmployeePersonalInfo | null;
 };
-const initialState: Partial<IEmployeePersonalInfo> = {
+//
+const initialState: Partial<IEmployeePersonalInfo | IEmployeeSignUpInfo> = {
   firstName: "",
   lastName: "",
   phone: "",
   address: "",
   roll: "",
+  email: "",
 };
 export const AddEmployeeCard: FC<Props> = ({ handleClose, employeeOnEdit }) => {
   const [employee, setEmployee] = useState(
@@ -58,9 +60,9 @@ export const AddEmployeeCard: FC<Props> = ({ handleClose, employeeOnEdit }) => {
     handleClose();
   };
 
-  const { firstName, lastName, phone, email, address } =
+  const { firstName, lastName, phone, email, address, roll } =
     employee as IEmployeeSignUpInfo;
-
+  console.log(employee);
   const Header = (
     <div className={classes.headerStyle}>
       <Title>Add Employee</Title>
@@ -105,7 +107,12 @@ export const AddEmployeeCard: FC<Props> = ({ handleClose, employeeOnEdit }) => {
         handleChange={handleChange}
         label='Address'
       />
-      <Input name='roll' handleChange={handleChange} label='Roll' />
+      <Input
+        name='roll'
+        value={roll}
+        handleChange={handleChange}
+        label='Roll'
+      />
     </>
   );
 
@@ -115,7 +122,11 @@ export const AddEmployeeCard: FC<Props> = ({ handleClose, employeeOnEdit }) => {
       <div className={classes.inputsGrop}>
         {Header}
         {Form}
-        <Btn handleClick={handleClick}>Add</Btn>
+        <div
+          style={{ width: "100%", display: "flex", justifyContent: "center" }}
+        >
+          <Btn handleClick={handleClick}>{employeeOnEdit ? "Edit" : "Add"}</Btn>
+        </div>
       </div>
     </div>
   );

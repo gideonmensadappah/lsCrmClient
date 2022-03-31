@@ -65,11 +65,12 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
       {!isMobile && (
         <TableHeadRow {...(tableHeaderProps as IEmployeePersonalInfo)} />
       )}
-      {employees.map((employee) => {
-        const { address, roll, phone, firstName, lastName, createdAt } =
+      {employees.map((employee: any) => {
+        const { address, roll, phone, firstName, lastName, email, createdAt } =
           employee;
-        const emp: IEmployeePersonalInfo = {
+        const emp = {
           _id: employee._id,
+          email: email,
           firstName: firstName,
           lastName: lastName,
           phone: phone?.trim() ? phone : "NO PHONE",

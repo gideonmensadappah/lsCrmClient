@@ -15,14 +15,14 @@ type RenderEmployeeCardProps = Pick<
   EmployeesListProps,
   "handleOpen" | "handleSetEmployeeOnEdit"
 > & {
-  employee: IEmployeePersonalInfo;
+  employee: IEmployeePersonalInfo | any;
 };
 
 export const RenderEmployeeCard: FC<RenderEmployeeCardProps> = (props) => {
   const dispatch = useDispatch();
   const { employee, handleOpen, handleSetEmployeeOnEdit } = props;
 
-  const { _id, ...rest } = employee;
+  const { _id, email, ...rest } = employee;
   const isAdmin = useIsSuperAdmin();
 
   const isMobile = useMobile();

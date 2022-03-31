@@ -41,7 +41,7 @@ export default makeStyles({
     gap: "1rem",
     margin: "0.5rem 0",
     borderBottom: "1px solid #EDF1F7",
-
+    padding: ".65rem 0",
     "& > *": {
       flexBasis: "100%",
       wordBreak: "break-word",
