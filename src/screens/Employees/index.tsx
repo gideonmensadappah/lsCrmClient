@@ -1,13 +1,9 @@
 import { FC, useEffect } from "react";
 
-import { CustomizedModal } from "../../components/Common/CustomizedModal";
 import { TableHeadRow } from "../../components/TableHeadRow/index";
 
 import { useMobile } from "../../hooks/useMobile";
-import {
-  IEmployeePersonalInfo,
-  IEmployeeSignUpInfo,
-} from "../../interfaces/Employee/index";
+import { IEmployeePersonalInfo } from "../../interfaces/Employee/index";
 
 import { header } from "./mock";
 import { RenderEmployeeCard } from "../../components/RenderEmployeeCard/index";
@@ -39,18 +35,6 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
 
   const isAdmin = useIsSuperAdmin();
 
-  // const modalProps = {
-  //   open,
-  //   displayBg: true,
-  //   handleClose,
-  //   Element: (
-  //     <div className={classes.editModal}>
-  //       <div onClick={handleClose}>Edit</div>
-  //       <div onClick={handleClose}>Delete</div>
-  //     </div>
-  //   ),
-  // };
-
   const tableHeaderProps = isAdmin
     ? {
         ...header,
@@ -59,6 +43,12 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
     : header;
 
   const isMobile = useMobile();
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
 
   return (
     <div className={classes.employeesListContainer}>
@@ -76,11 +66,12 @@ export const EmployeesList: FC<EmployeesListProps> = (props) => {
           phone: phone?.trim() ? phone : "NO PHONE",
           address: address?.trim() ? address : "NO ADDRESS",
           roll: roll?.trim() ? roll : "NO ROLL",
-          createdAt: createdAt,
+          createdAt: new Date(createdAt).toLocaleDateString("en-us", {
+            ...options,
+          } as any),
         };
         return <RenderEmployeeCard {...{ employee: emp, ...props }} />;
       })}
-      {/* <CustomizedModal {...modalProps} /> */}
     </div>
   );
 };
