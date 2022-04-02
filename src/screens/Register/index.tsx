@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Input } from "../../components/Common/Input/index";
 import { Btn } from "../../components/Common/Button/index";
 import useStyles from "./useStyles";
@@ -11,15 +11,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../../hooks/useAuth";
 import { emploeesAction } from "../../redux/employees/employees.reducer";
 import { add_employee } from "../../redux/employees/employees.actions";
+import useFormHook from "../../hooks/useForm";
+import { IEmployeeSignUpInfo } from "../../interfaces/Employee/index";
+import { getIconByName } from "../../utils/Healpers/index";
 import {
   employeesErrorTypeStateSelector,
   employeesErrorStateSelector,
 } from "../../redux/employees/employees-selector";
 
 export const Register: FC = () => {
-  const [formState, setInputState] = useState(initialIEmployeeSignUpInfo);
+  const [disabled, setDisabled] = useState(true);
+  const [errorsState, setErrors] = useState<any>({});
+  const [passwordInputView, setPasswordInputView] = useState(false);
+  const [retypePasswordInputView, setRetypePasswordInputView] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { clearError } = emploeesAction;
   const employeesError = useSelector(employeesErrorStateSelector);
 
@@ -31,18 +39,44 @@ export const Register: FC = () => {
     clearSource: clearError,
   });
 
+  const formHookResult = useFormHook<IEmployeeSignUpInfo, IEmployeeSignUpInfo>(
+    initialIEmployeeSignUpInfo,
+    {} as IEmployeeSignUpInfo
+  );
+
+  const { handleChange, resetForm, errors, values } = formHookResult;
+
+  useEffect(() => {
+    const { email, password } = values;
+    const disabled =
+      Object.values(errors).filter(Boolean).length !== 0 || !password || !email;
+
+    setDisabled(!!disabled);
+    setErrors({ password: false, email: false });
+  }, [setDisabled, errors, values]);
+
   const gotoSignIn = () => navigate(Path.login);
 
-  const handleChange = ({
-    target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    setInputState((prev) => ({ ...prev, [name]: value }));
+  const handleChangepasswordView = () =>
+    setPasswordInputView((prevView) => !prevView);
+  const handleChangeRetypepasswordView = () =>
+    setRetypePasswordInputView((prevView) => !prevView);
 
   const handleClick = () => {
-    dispatch(add_employee(formState));
-    setInputState(initialIEmployeeSignUpInfo);
-  };
+    if (!disabled) {
+      resetForm(values);
+      dispatch(add_employee(values));
+      return;
+    }
 
+    setErrors({
+      firstName: !values.firstName.trim(),
+      lastName: !values.lastName.trim(),
+      email: !values.email.trim(),
+      password: !values.password.trim(),
+      retypePassword: !values.retypePassword.trim(),
+    });
+  };
   const classes = useStyles();
   const styls = {
     justifyContent: "center",
@@ -65,37 +99,69 @@ export const Register: FC = () => {
           <div>
             <RenderFormTitle>Personal Details</RenderFormTitle>
             <Input
-              value={formState.firstName}
+              value={values.firstName}
               handleChange={handleChange}
               name='firstName'
               label='First Name'
+              type='text'
+              error={errorsState.firstName}
             />
             <Input
-              value={formState.lastName}
+              value={values.lastName}
               handleChange={handleChange}
               name='lastName'
               label='Last Name'
+              type='text'
+              error={errorsState.lastName}
             />
+
             <Input
-              value={formState.email}
+              value={values.email}
               handleChange={handleChange}
               name='email'
               label='Email'
+              type='email'
+              error={errorsState.email}
             />
 
             <RenderFormTitle>Password</RenderFormTitle>
-            <Input
-              value={formState.password}
-              handleChange={handleChange}
-              name='password'
-              label='Password'
-            />
-            <Input
-              value={formState.retypePassword}
-              handleChange={handleChange}
-              name='retypePassword'
-              label='Retype Password'
-            />
+            <div style={{ position: "relative" }}>
+              <Input
+                value={values.password}
+                handleChange={handleChange}
+                name='password'
+                label='Password'
+                type={passwordInputView ? "text" : "password"}
+                error={errorsState.password}
+              />
+              <img
+                style={{ position: "absolute", right: "1rem", top: "1.5rem" }}
+                onClick={handleChangepasswordView}
+                src={getIconByName(passwordInputView ? "view" : "viewOff")}
+                alt='view icon'
+              />
+            </div>
+            <div style={{ position: "relative" }}>
+              <Input
+                type={retypePasswordInputView ? "text" : "password"}
+                value={values.retypePassword}
+                handleChange={handleChange}
+                name='retypePassword'
+                label='Retype Password'
+                error={
+                  errorsState.retypePassword ||
+                  values.password !== values.retypePassword
+                }
+              />
+              <img
+                style={{ position: "absolute", right: "1rem", top: "1.5rem" }}
+                onClick={handleChangeRetypepasswordView}
+                src={getIconByName(
+                  retypePasswordInputView ? "view" : "viewOff"
+                )}
+                alt='view icon'
+              />
+            </div>
             <Btn handleClick={handleClick}>Sign Up</Btn>
           </div>
         </div>

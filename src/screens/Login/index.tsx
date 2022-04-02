@@ -8,10 +8,8 @@ import { CustomizedSelects } from "../../components/Common/Select/index";
 import { useNavigate } from "react-router-dom";
 import { Path } from "../../interfaces/Routes";
 
-import { initialIEmployeeSignUpInfo } from "../../utils/Healpers/staticData";
 import useStyles from "../Register/useStyles";
 import CustomizedSnackbars from "../../components/Common/Snackbars/index";
-import { alertAction } from "../../redux/alerts/alert-reducer";
 import { singIn } from "../../redux/auth/auth-actions";
 import {
   authMessageStateSelector,
@@ -23,8 +21,10 @@ import "firebaseui/dist/firebaseui.css";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { authAction } from "../../redux/auth/auth-reducer";
-import { AlertType } from "../../interfaces/redux/IAlertState";
 import { useAuth } from "../../hooks/useAuth";
+import { IEmployeeSignUpInfo } from "../../interfaces/Employee/index";
+import useFormHook from "../../hooks/useForm";
+import { getIconByName } from "../../utils/Healpers/index";
 
 const styls = {
   justifyContent: "center",
@@ -37,15 +37,28 @@ type LoginProps = {
   firbaseApp?: firebase.app.App;
 };
 export const Login: FC<LoginProps> = ({ firbaseApp }) => {
-  const [formState, setInputState] = useState(initialIEmployeeSignUpInfo);
   const authMeeage = useSelector(authMessageStateSelector);
   const authErrorType = useSelector(authMessageTypeStateSelector);
+  const [disabled, setDisabled] = useState(true);
+  const [errorsState, setErrors] = useState<any>({});
+  const [passwordInputView, setPasswordInputView] = useState(false);
 
   const { clearError } = authAction;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useAuth({ authMeeage, authErrorType, clearSource: clearError });
+
+  const formHookResult = useFormHook<IEmployeeSignUpInfo, IEmployeeSignUpInfo>(
+    {
+      email: "",
+      password: "",
+    } as IEmployeeSignUpInfo,
+    {} as IEmployeeSignUpInfo
+  );
+
+  const { handleChange, resetForm, errors, values } = formHookResult;
 
   // useEffect(() => {
   //   const ui = new firebaseui.auth.AuthUI(firbaseApp.auth());
@@ -62,16 +75,31 @@ export const Login: FC<LoginProps> = ({ firbaseApp }) => {
   //   });
   // }, []);
 
+  useEffect(() => {
+    const { email, password } = values;
+    const disabled =
+      Object.values(errors).filter(Boolean).length !== 0 || !password || !email;
+
+    setDisabled(!!disabled);
+    setErrors({ password: false, email: false });
+  }, [setDisabled, errors, values]);
+
+  const handleChangepasswordView = () =>
+    setPasswordInputView((prevView) => !prevView);
+
   const gotoSignIn = () => navigate(Path.register);
 
-  const handleChange = ({
-    target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    setInputState((prev) => ({ ...prev, [name]: value }));
-
   const handleClick = () => {
-    setInputState(initialIEmployeeSignUpInfo);
-    dispatch(singIn(formState));
+    if (!disabled) {
+      resetForm(values);
+      dispatch(singIn(values));
+      return;
+    }
+
+    setErrors({
+      password: true,
+      email: true,
+    });
   };
 
   const classes = useStyles();
@@ -90,18 +118,29 @@ export const Login: FC<LoginProps> = ({ firbaseApp }) => {
         <div className={classes.formCard}>
           <div>
             <Input
-              value={formState.email}
+              value={values.email}
               handleChange={handleChange}
               name='email'
               label='Email'
+              error={!!errorsState.email}
             />
 
-            <Input
-              value={formState.password}
-              handleChange={handleChange}
-              name='password'
-              label='Password'
-            />
+            <div style={{ position: "relative" }}>
+              <Input
+                value={values.password}
+                handleChange={handleChange}
+                name='password'
+                label='Password'
+                type={passwordInputView ? "text" : "password"}
+                error={errorsState.password}
+              />
+              <img
+                style={{ position: "absolute", right: "1rem", top: "1.5rem" }}
+                onClick={handleChangepasswordView}
+                src={getIconByName(passwordInputView ? "view" : "viewOff")}
+                alt='view icon'
+              />
+            </div>
             <div className={classes.signInButtonWrapper}>
               <Btn handleClick={handleClick}>Sign In</Btn>
             </div>

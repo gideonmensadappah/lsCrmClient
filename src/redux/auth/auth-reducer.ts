@@ -34,7 +34,7 @@ export const authSlice = createSlice({
         ...state,
         employee: undefined,
         errorType: AlertType.success,
-        error: "SignOut successfully!",
+        error: "Logged out successfully!",
       };
     },
   },
@@ -44,7 +44,7 @@ export const authSlice = createSlice({
       const employee = action.payload;
       state.employee = employee;
       state.loading = false;
-      state.error = "Logged In successfully!";
+      state.error = "Logged in successfully";
       state.errorType = AlertType.success;
     });
     builder.addCase(singIn.pending, (state, action) => {

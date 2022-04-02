@@ -119,6 +119,7 @@ export const AddEmployeeCard: FC<Props> = ({ handleClose, employeeOnEdit }) => {
   return (
     <div className={classes.boxStyle}>
       {isMobile && <ArrowBack onClick={handleClose} />}
+
       <div className={classes.inputsGrop}>
         {Header}
         {Form}

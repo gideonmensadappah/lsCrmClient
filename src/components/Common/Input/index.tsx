@@ -6,6 +6,8 @@ type Props = {
   label: string;
   name?: string;
   value?: string;
+  error?: boolean;
+  type?: string;
   handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -28,5 +30,8 @@ const useStyles = makeStyles({
   input: {
     marginTop: "1rem !important",
     width: "100% !important",
+    "& >div >input": {
+      paddingRight: "3.5rem !important",
+    },
   },
 });
